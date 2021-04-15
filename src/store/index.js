@@ -2,7 +2,12 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 
-import { SET_ERROR, SET_LOADING, UPDATE_MOVIES } from "./mutation-types.js";
+import {
+  SET_ERROR,
+  SET_LOADING,
+  UPDATE_MOVIES,
+  SET_MINIMUM_RATING,
+} from "./mutation-types.js";
 
 let devMode = process.env.NODE_ENV === "development";
 
@@ -13,6 +18,26 @@ export default new Vuex.Store({
     globalError: "",
     loading: false,
     movies: [],
+    minimumRating: 3.0,
+  },
+  getters: {
+    isMovieListLoaded: (state) => {
+      if (state.movies && state.movies.length && state.movies.length > 0)
+        return true;
+      return false;
+    },
+    getFiltereList: (state) => {
+      if (state.movies && state.movies.length && state.movies.length > 0) {
+        const movies = state.movies;
+        const minRating = state.minimumRating;
+        let filtered = movies.filter(
+          (movie) => movie.vote_average >= minRating
+        );
+        filtered.sort((a, b) => b.popularity - a.popularity); //desc sorting by popularity property
+        return filtered;
+      }
+      return [];
+    },
   },
   mutations: {
     [SET_ERROR]: (state, error) => {
@@ -23,6 +48,9 @@ export default new Vuex.Store({
     },
     [UPDATE_MOVIES]: (state, payload) => {
       state.movies = payload;
+    },
+    [SET_MINIMUM_RATING]: (state, value) => {
+      state.minimumRating = value;
     },
   },
   actions: {
@@ -44,6 +72,10 @@ export default new Vuex.Store({
 
       const API_KEY = process.env.VUE_APP_API_KEY; //from .env file
 
+      /*
+        I have not placed 'https://api.themoviedb.org/3/movie' in .env as a BASE_URL
+      */
+
       console.log(API_KEY);
 
       axios
@@ -60,6 +92,10 @@ export default new Vuex.Store({
           context.commit(SET_ERROR, err.toString()); //mutation
           context.dispatch("stopLoading"); //action
         });
+    },
+    setMinRating: (context, value) => {
+      if (devMode) console.log("Action: store/setMinRating", value);
+      context.commit(SET_MINIMUM_RATING, value);
     },
   },
   modules: {},

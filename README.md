@@ -50,3 +50,10 @@ npm run build
 npm run lint
 ```
 
+### Fix the issue with SSRI
+[Regular Expression Denial of Service](https://www.npmjs.com/advisories/565/versions)
+
+**Overview**     
+ssri 5.2.2-6.0.1 and 7.0.0-8.0.0, processes SRIs using a regular expression which is vulnerable to a denial of service. Malicious SRIs could take an extremely long time to process, leading to denial of service. This issue only affects consumers using the strict option.
+**Remediation**    
+Update to version 6.0.2 or 8.0.1 or later     

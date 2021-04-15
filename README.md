@@ -12,7 +12,7 @@ This application uses: [TMDb Movies Now Playing API](https://developers.themovie
 [TMDb Image API](https://developers.themoviedb.org/3/getting-started/images)
 
 **Please use your own API_KEY to have access to TMDb API**     
-**Place your own API_KEY in .env file in the root project folder**    
+**[Place your own VUE_APP_API_KEY](https://cli.vuejs.org/guide/mode-and-env.html#example-staging-mode) in .env file in the root project folder**    
 
 
 This web app is bootstrapped with [Vue CLI create a project](https://cli.vuejs.org/guide/creating-a-project.html)        

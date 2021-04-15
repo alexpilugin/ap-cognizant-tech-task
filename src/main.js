@@ -4,8 +4,7 @@ import router from "./router";
 import store from "./store";
 
 /* https://www.npmjs.com/package/dotenv */
-import dotenv from "dotenv";
-dotenv.config(); // Make API_KEY available: process.env.API_KEY
+require("dotenv").config(); // Make API_KEY available: process.env.API_KEY
 
 Vue.config.productionTip = false;
 

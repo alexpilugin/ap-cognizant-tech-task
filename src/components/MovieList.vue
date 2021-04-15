@@ -10,13 +10,13 @@
         :key="`movie-${index}`"
         class="movie-item"
       >
+        <img :src="getPosterURL(movie.poster_path)" alt="Movie Poster" />
         <h2>{{ movie.title }}</h2>
         <p>
           {{ getGenreNames(movie.genre_ids) }}<br />
           Rating: {{ movie.vote_average }} <br />
           Popularity: {{ movie.popularity }}<br />
         </p>
-        <img :src="getPosterURL(movie.poster_path)" alt="Movie Poster" />
       </div>
     </div>
   </div>
@@ -62,7 +62,7 @@ export default {
 
     .movie-item {
       flex: 1 1 auto;
-      max-width: 320px;
+      max-width: 300px;
       padding: 10px;
     }
   }

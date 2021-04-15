@@ -6,6 +6,7 @@ import {
   SET_ERROR,
   SET_LOADING,
   UPDATE_MOVIES,
+  UPDATE_GENRES,
   SET_MINIMUM_RATING,
 } from "./mutation-types.js";
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     globalError: "",
     loading: false,
     movies: [],
+    genres: [],
     minimumRating: 3.0,
   },
   getters: {
@@ -38,6 +40,22 @@ export default new Vuex.Store({
       }
       return [];
     },
+    getGenresById: (state) => {
+      const genres = state.genres;
+
+      function getGenreNames(ids) {
+        const movieGenres = [];
+        if (state.genres && state.genres.length && state.genres.length > 0) {
+          ids.forEach((id) => {
+            const genre = genres.find((genre) => genre.id === id); // first element with an unique id
+            movieGenres.push(genre.name);
+          });
+        }
+        return movieGenres.join();
+      }
+      //return a closure function:
+      return getGenreNames;
+    },
   },
   mutations: {
     [SET_ERROR]: (state, error) => {
@@ -48,6 +66,9 @@ export default new Vuex.Store({
     },
     [UPDATE_MOVIES]: (state, payload) => {
       state.movies = payload;
+    },
+    [UPDATE_GENRES]: (state, payload) => {
+      state.genres = payload;
     },
     [SET_MINIMUM_RATING]: (state, value) => {
       state.minimumRating = value;
@@ -85,6 +106,25 @@ export default new Vuex.Store({
         .then(function (response) {
           context.commit(UPDATE_MOVIES, response.data.results); //mutation
           if (devMode) console.log(response.data);
+          context.dispatch("stopLoading"); //action
+        })
+        .catch((err) => {
+          console.error(err);
+          context.commit(SET_ERROR, err.toString()); //mutation
+          context.dispatch("stopLoading"); //action
+        });
+    },
+    loadGenres: (context) => {
+      if (devMode) console.log("Action: store/loadGenres");
+      context.commit(SET_LOADING, true); //action
+      const API_KEY = process.env.VUE_APP_API_KEY; //from .env file
+      axios
+        .get(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`
+        )
+        .then(function (response) {
+          context.commit(UPDATE_GENRES, response.data.genres); //mutation
+          if (devMode) console.log(response.data.genres);
           context.dispatch("stopLoading"); //action
         })
         .catch((err) => {

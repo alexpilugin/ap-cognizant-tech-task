@@ -30,11 +30,19 @@ const router = new VueRouter({
 
 // Nav Guard
 router.beforeEach((to, from, next) => {
+  /*
+    In order to download data only one time - I place API requests here
+  */
   console.log(
-    "Before Each Route check if the list of movies is loaded already"
+    "Before Each Route check if the lists of genred and movies are loaded already"
   );
-  if (!store.state.movies.length || store.state.movies.length < 1)
+  if (!store.state.genres.length || store.state.genres.length < 1) {
+    store.dispatch("loadGenres");
+  }
+  if (!store.state.movies.length || store.state.movies.length < 1) {
     store.dispatch("loadMovies");
+  }
+
   // Proceed to route
   next();
 });
